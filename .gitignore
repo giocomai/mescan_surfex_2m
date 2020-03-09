@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+01-download_scripts
+02-grib_monthly
+03-monthly_average
+04-comparison
+reference_geometry_sf.rds
+all_months.rds
