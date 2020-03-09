@@ -1,0 +1,59 @@
+---
+title: "README"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Get the software
+
+On Ubuntu
+
+```{bash, eval = FALSE}
+sudo apt-get install eccodes
+```
+
+On Fedora
+
+```{bash, eval = FALSE}
+sudo dnf install eccodes
+```
+
+# Get R ready
+
+
+Libraries needed:
+
+
+```{r}
+c("tidyverse", # one package to rule them all
+  "lubridate", # easier dates
+  "fs",        # file management
+  "stars",     # spatial objects, from grib to sf
+  "sf",        # spatial objects, sf
+  "testthat"   # basic quality control checks
+  )
+```
+
+
+
+# Get Python ready
+
+
+
+# Get the data
+
+The data are distributed by Copernicus:
+https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-uerra-europe-single-levels
+
+
+## Authenticate
+In order to download them, you must first register and authenticate access to the API. See instructions:
+https://cds.climate.copernicus.eu/api-how-to
+
+## Generate the download scripts
+
+
