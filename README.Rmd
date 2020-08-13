@@ -1,6 +1,6 @@
 ---
 title: "README"
-output: html_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -56,4 +56,4 @@ https://cds.climate.copernicus.eu/api-how-to
 
 ## Generate the download scripts
 
-
+Follow `step 01.R` and following files. 
