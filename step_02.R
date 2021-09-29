@@ -19,11 +19,11 @@ message(paste(length(current_gribs), "files downloaded.",
               length(scripts_to_download), "files to download.",
               "Progress bar refers to missing files."))
 
-pb <- dplyr::progress_estimated(n = length(scripts_to_download))
+pb <- progress::progress_bar$new(total = length(scripts_to_download))
 
 purrr::walk(.x = scripts_to_download,
             .f = function(x) {
+              pb$tick()
               system(command = x)
-              pb$tick()$print()
             }
 )

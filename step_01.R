@@ -8,7 +8,8 @@ all_months <- seq.Date(from = as.Date("1961-01-01"), to = as.Date("2018-12-31"),
   count(name = "days") %>% 
   ungroup()
 
-saveRDS(object = all_months, file = "all_months.rds")
+readr::write_csv(x = all_months,
+                 file = "all_months.csv")
 
 fs::dir_create(path = "01-download_scripts")
 fs::dir_create(path = "02-grib_monthly")
