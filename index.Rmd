@@ -1,0 +1,235 @@
+---
+title: "Glocal Climate Change dataset"
+description: |
+  Full dataset and the scripts used to recreate or adapt it
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library("dplyr", warn.conflicts = FALSE)
+library("sf")
+library("ggplot2")
+
+library("latlon2map")
+options(timeout = 6000)
+
+```
+
+
+# Introduction
+
+This repository includes code that can be used to replicate the data exposed by "[Glocal Climate Change](https://climatechange.europeandatajournalism.eu/)", an investigation carried out by OBC Transeuropa for the European Data Journalism Network (EDJNet) in 2020.
+
+Find more details in the relevant ["About" page](https://climatechange.europeandatajournalism.eu/en/about).
+
+It also includes pre-processed data that can be downloaded from the releases associated with this repository on GitHub.
+
+## Data sources and coverage
+
+The dataset combines different sources, in particular:
+
+- the [UERRA regional reanalysis for Europe on single levels from 1961 to 2019](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-uerra-europe-single-levels?tab=overview) by Copernicus Climate Change Service information (2019),  which covers the vast mojority of the EU's surface, but not some overseas territories
+- data for local administrative units (LAU/municipalities) and regions/districts (NUTS2/NUTS3) [distributed by Eurostat](https://ec.europa.eu/eurostat/web/nuts/nuts-maps) and available for EU countries, EU candidate countries, and EFTA countries
+- to define a single coordinate point as the centre of each LAU, we calculated the population-weighted centre of each LAU based on the [1km population grid distributed by Eurostat](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat), or the centroid when the latter was not available.
+
+As a consequence, data for some regions and municipalities covered by NUTS are not (fully) available. On the other hand, countries covered in full or in part by the Copernicus dataset (e.g. Belarus, Ukraine, Russia) are not included in the final dataset. Relevant data can however be extrapolated using the same procedure outlined here.
+
+
+```{r}
+
+ggplot() +
+  geom_sf(data = ll_get_nuts_eu(level = 0)) +
+  geom_sf(data = readr::read_rds("area_covered_sf.rds"), alpha = 0) +
+  labs(title = "Area covered by temperature dataset and\ncountries included in NUTS")
+
+```
+Here is a full list of NUTS regions not (fully) included in the dataset:
+
+```{r}
+
+nuts_within_df <- ll_get_nuts_eu(level = 2) %>% sf::st_transform(crs = 4326) %>% 
+  sf::st_filter(y = readr::read_rds("area_covered_sf.rds") %>% sf::st_transform(crs = 4326), .predicate = st_within) %>% 
+  sf::st_drop_geometry()
+
+ll_get_nuts_eu(level = 2) %>% 
+  sf::st_drop_geometry() %>% 
+  dplyr::anti_join(y = nuts_within_df, by = "NUTS_ID") %>% 
+  dplyr::select(NUTS_ID, CNTR_CODE, NUTS_NAME) %>% 
+  knitr::kable()
+
+```
+
+
+
+# Context, data quality, and warnings
+
+If you plan to re-use these data, you should be aware of their limitations.
+
+For more details, check out the methodological note [at the bottom of this article](https://www.europeandatajournalism.eu/eng/News/Data-news/Climate-warming-in-Europe-municipality-by-municipality) and [read the documentation that accompanies the original dataset](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-uerra-europe-single-levels?tab=doc). 
+
+This video outlines some common issues related to data grids based on this dataset:
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/cAzMzIepOC8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+Some of the issues presented in the video are mentioned also in the original documentation: “results in complex terrain, such as mountainous regions or coastal areas, are generally less reliable than results over a more homogeneous terrain. The models cannot represent the strong gradients that sometimes are caused by the variable terrain.”
+
+
+# Access the data
+
+All datasets produced in these analyses are attached as [releases to this GitHub repository](https://github.com/giocomai/mescan_surfex_2m/releases/) as gzipped csv files (gzipped csv files can be opened directly by software ranging from LibreOffice to R's `readr`; alternatively, they can be unzipped and processed as regular csv files).
+
+The final dataset with all data at the LAU and NUTS level can be downloaded from the following link:
+
+
+Intermediate pre-processed datasets generated as detailed below can be found at the following links:
+
+- [monthly averages](https://github.com/giocomai/mescan_surfex_2m/releases/tag/monthly_average)
+- [yearly averages](https://github.com/giocomai/mescan_surfex_2m/releases/tag/yearly_average)
+
+Users of the R programming language can access them easily with the `piggyback` package. 
+
+For example, to download all files with yearly averages:
+
+```{r eval=FALSE}
+library("piggyback")
+fs::dir_create("yearly_averages")
+
+pb_download(dest = "yearly_averages", 
+            repo = "giocomai/mescan_surfex_2m",
+            tag = "yearly_average") # or "monthly_average" for monthly values
+
+```
+
+To download just some of the files:
+
+```{r eval = FALSE}
+pb_download(file = "1977_average.csv.gz",
+            dest = "yearly_averages", 
+            repo = "giocomai/mescan_surfex_2m",
+            tag = "yearly_average")
+```
+To read them:
+
+```{r eval = FALSE}
+
+readr::read_csv(file = fs::path("yearly_averages",
+                                "1977_average.csv.gz"))
+
+```
+
+The following code allows you to read average yearly data for all grid cells:
+
+```{r eval = FALSE}
+
+library("piggyback")
+fs::dir_create("yearly_averages")
+
+pb_download(dest = "yearly_averages", 
+            repo = "giocomai/mescan_surfex_2m",
+            tag = "yearly_average")
+
+yearly_averages_df <- purrr::map_dfr(
+  .x = fs::dir_ls(path = "yearly_averages",
+                  type = "file"),
+  .f = function(x) {
+    readr::read_csv(file = x,
+                    col_types = readr::cols(
+                      id = readr::col_double(),
+                      temperature = readr::col_double()
+                    ))
+  }, .id = "year") %>% 
+  dplyr::mutate(year = as.integer(fs::path_file(year) %>% 
+                                    stringr::str_extract(pattern = "[0-9]{4}")))
+
+yearly_averages_df
+```
+These data to not inlcude the reference cell, but only the id of the relevant cell in the grid. To match data with sources, download the reference geometry, available both as grid cells in R's `sf` format as well as a csv with centroids of the relevant grid cell.
+
+```{r eval = FALSE}
+library("piggyback")
+fs::dir_create("reference_geometry")
+
+pb_download(dest = "reference_geometry", 
+            repo = "giocomai/mescan_surfex_2m",
+            tag = "reference_geometry")
+
+# for sf object
+reference_sf <- readr::read_rds(file = fs::path("reference_geometry", 
+                                                "reference_geometry_sf.rds")) %>% 
+  dplyr::mutate(id = dplyr::row_number())
+
+# for lat/lon coordinates
+reference_df <- readr::read_csv(file = fs::path("reference_geometry", 
+                                                "reference_geometry_df.csv.gz"),
+                                col_types = readr::cols(
+                                  longitude = readr::col_double(),
+                                  latitude = readr::col_double()
+                                )) %>% 
+  dplyr::mutate(id = dplyr::row_number())
+
+```
+
+So you can load files and then do the matching with the relevant geometry/coordinates:
+
+```{r eval = FALSE}
+yearly_averages_df %>% 
+  dplyr::left_join(y = reference_sf, by = "id")
+```
+
+Or if you are interested in a specific location/area, you probably want to first identify the relevant grid cells by id, and then keep only the relevant id when you read in data.
+
+
+# Replicate the dataset
+
+
+In order to replicate the process with the scripts included in this repository, you will need to make sure you have relevant software installed and authenticate with Copernicus to download the data from them. 
+
+## Software
+
+
+On Ubuntu
+
+```{bash, eval = FALSE}
+sudo apt-get install eccodes
+```
+
+On Fedora
+
+```{bash, eval = FALSE}
+sudo dnf install eccodes
+```
+
+R, including in particular the following libraries:
+
+```{r eval = FALSE}
+c("tidyverse", # one package to rule them all
+  "lubridate", # easier dates
+  "fs",        # file management
+  "stars",     # spatial objects, from grib to sf
+  "sf",        # spatial objects, sf
+  "piggyback", # get data from GitHub repo
+  "testthat"   # basic quality control checks
+  )
+
+# for downloading and caching LAU and NUTS data
+remotes::install_github("giocomai/latlon2map") 
+```
+
+
+The whole process takes place with a series of scripts to be processed in order. 
+
+Consider that you can skip the first steps and download from the "Release" section of this repository pre-processed data. 
+
+
+- `step_01.R` - create download scripts to get the data from the source
+- `step_02.R` - download data in .grib format (about 200 GB of data)
+- `step_03.R` - calculate monthly and yearly averages
+- `step_04.R` - compare first decade with last decade
+- `step_05.R` - find population-weighted centre of municipalities for matching
+- `step_06.R` - match municipalities to cells and merge with first/last decade temperature difference
+- `step_07.R` - include data and difference from all years to match the published dataset used for the dashboard
+- `step_08.R` -  quality checks
+

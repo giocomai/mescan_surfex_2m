@@ -8,3 +8,12 @@
 04-comparison
 reference_geometry_sf.rds
 all_months.rds
+03-yearly_average
+05-population_weighted_centres
+07-dataset_eu
+07-dataset_by_country
+06-lau_temp_difference
+population_weighted_centre
+reference_geometry_df.csv.gz
+yearly_averages
+ll_data

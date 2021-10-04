@@ -1,0 +1,10 @@
+name: "mescan_surfex_2m"
+title: "Glocal Climate Change dataset"
+description: |
+  Full dataset and the scripts used to recreate or adapt it
+output_dir: "docs"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+output: distill::distill_article

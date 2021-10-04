@@ -58,6 +58,7 @@ purrr::walk(
                          by = "cell_id") %>% 
         dplyr::group_by(gisco_id) %>% 
         dplyr::mutate(variation_year = avg_year-dplyr::lag(avg_year)) %>% 
+        dplyr::ungroup() %>% 
         dplyr::transmute(CNTR_CODE = country_code,
                          NUTS_2_ID = nuts_2, 
                          NUTS_3_ID = nuts_3,
@@ -74,9 +75,6 @@ purrr::walk(
         readr::write_csv(file = current_csv_file)
     }
   })
-
-
-
 
 
 fs::dir_create("07-dataset_eu")

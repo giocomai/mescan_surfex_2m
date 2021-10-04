@@ -152,3 +152,9 @@ if (fs::file_exists(reference_geometry_sf_file)) {
                    file = "reference_geometry_df.csv.gz")
 }
 
+if (fs::file_exists("area_covered_sf.rds")==FALSE) {
+  area_covered_sf <- reference_geometry_sf %>% 
+    dplyr::summarise()
+  
+  saveRDS(object = area_covered_sf, file = "area_covered_sf.rds")
+}
