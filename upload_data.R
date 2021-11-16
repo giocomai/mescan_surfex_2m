@@ -33,5 +33,53 @@ pb_upload(file = c("reference_geometry_df.csv.gz",
   repo = "giocomai/mescan_surfex_2m",
   tag = "reference_geometry")
 
-pb_delete(repo = "giocomai/mescan_surfex_2m",
-          tag = "reference_geometri")
+
+pb_new_release(repo = "giocomai/mescan_surfex_2m",
+               tag = "04-comparison",
+               prerelease = FALSE)
+
+
+pb_upload(file = fs::dir_ls("04-comparison"),
+          repo = "giocomai/mescan_surfex_2m",
+          tag = "04-comparison")
+
+
+pb_new_release(repo = "giocomai/mescan_surfex_2m",
+               tag = "05-population_weighted_centres",
+               prerelease = FALSE)
+
+
+pb_upload(file = fs::dir_ls("05-population_weighted_centres"),
+          repo = "giocomai/mescan_surfex_2m",
+          tag = "05-population_weighted_centres")
+
+
+
+pb_new_release(repo = "giocomai/mescan_surfex_2m",
+               tag = "06-lau_temp_difference-lau_2018-nuts_2016-pop_grid_2018",
+               prerelease = FALSE)
+
+
+pb_upload(file = fs::dir_ls("06-lau_temp_difference-lau_2018-nuts_2016-pop_grid_2018"),
+          repo = "giocomai/mescan_surfex_2m",
+          tag = "06-lau_temp_difference-lau_2018-nuts_2016-pop_grid_2018")
+
+
+pb_new_release(repo = "giocomai/mescan_surfex_2m",
+               tag = "07-dataset_by_country-lau_2018-nuts_2016-pop_grid_2018",
+               prerelease = FALSE)
+
+
+pb_upload(file = fs::dir_ls("07-dataset_by_country-lau_2018-nuts_2016-pop_grid_2018"),
+          repo = "giocomai/mescan_surfex_2m",
+          tag = "07-dataset_by_country-lau_2018-nuts_2016-pop_grid_2018")
+
+
+pb_new_release(repo = "giocomai/mescan_surfex_2m",
+               tag = "07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018",
+               prerelease = FALSE)
+
+
+pb_upload(file = fs::dir_ls("07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018"),
+          repo = "giocomai/mescan_surfex_2m",
+          tag = "07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018")

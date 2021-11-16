@@ -7,4 +7,6 @@ navbar:
   right:
     - text: "Home"
       href: index.html
+    - icon: fab fa-github
+      href: https://github.com/EDJNet/mescan_surfex_2m
 output: distill::distill_article

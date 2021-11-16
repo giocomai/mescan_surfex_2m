@@ -19,6 +19,7 @@
  <!--/radix_placeholder_import_source-->
 
 
+
   <!--radix_placeholder_meta_tags-->
   <title>Glocal Climate Change dataset: Untitled</title>
 
@@ -1793,7 +1794,10 @@
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          return "<p>" + $('#ref-' + ref).html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1988,6 +1992,9 @@
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
+<a href="https://github.com/EDJNet/mescan_surfex_2m">
+<i class="fab fa-github" aria-hidden="true"></i>
+</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>

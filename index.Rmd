@@ -83,6 +83,8 @@ All datasets produced in these analyses are attached as [releases to this GitHub
 
 The final dataset with all data at the LAU and NUTS level can be downloaded from the following link:
 
+https://github.com/giocomai/mescan_surfex_2m/releases/download/07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018/by_lau_all_years.csv.gz
+
 
 Intermediate pre-processed datasets generated as detailed below can be found at the following links:
 
@@ -231,5 +233,5 @@ Consider that you can skip the first steps and download from the "Release" secti
 - `step_05.R` - find population-weighted centre of municipalities for matching
 - `step_06.R` - match municipalities to cells and merge with first/last decade temperature difference
 - `step_07.R` - include data and difference from all years to match the published dataset used for the dashboard
-- `step_08.R` -  quality checks
+- `step_08.R` - quality checks
 

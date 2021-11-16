@@ -55,7 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
 code span.cf { color: #007ba5; } /* ControlFlow */
@@ -76,13 +76,14 @@ code span.kw { color: #007ba5; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
 code span.ot { color: #007ba5; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>Glocal Climate Change dataset</title>
@@ -1861,7 +1862,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          return "<p>" + $('#ref-' + ref).html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -2064,6 +2068,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
+<a href="https://github.com/EDJNet/mescan_surfex_2m">
+<i class="fab fa-github" aria-hidden="true"></i>
+</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2106,14 +2113,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>Here is a full list of NUTS regions not (fully) included in the dataset:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>nuts_within_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/latlon2map/man/ll_get_nuts_eu.html'>ll_get_nuts_eu</a></span><span class='op'>(</span>level <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a></span><span class='op'>(</span>crs <span class='op'>=</span> <span class='fl'>4326</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_join.html'>st_filter</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/read_rds.html'>read_rds</a></span><span class='op'>(</span><span class='st'>"area_covered_sf.rds"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a></span><span class='op'>(</span>crs <span class='op'>=</span> <span class='fl'>4326</span><span class='op'>)</span>, .predicate <span class='op'>=</span> <span class='va'>st_within</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>nuts_within_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/latlon2map/man/ll_get_nuts_eu.html'>ll_get_nuts_eu</a></span><span class='op'>(</span>level <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a></span><span class='op'>(</span>crs <span class='op'>=</span> <span class='fl'>4326</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_join.html'>st_filter</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/read_rds.html'>read_rds</a></span><span class='op'>(</span><span class='st'>"area_covered_sf.rds"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a></span><span class='op'>(</span>crs <span class='op'>=</span> <span class='fl'>4326</span><span class='op'>)</span>, .predicate <span class='op'>=</span> <span class='va'>st_within</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_geometry.html'>st_drop_geometry</a></span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/pkg/latlon2map/man/ll_get_nuts_eu.html'>ll_get_nuts_eu</a></span><span class='op'>(</span>level <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_geometry.html'>st_drop_geometry</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter-joins.html'>anti_join</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>nuts_within_df</span>, by <span class='op'>=</span> <span class='st'>"NUTS_ID"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>NUTS_ID</span>, <span class='va'>CNTR_CODE</span>, <span class='va'>NUTS_NAME</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+<span class='fu'><a href='https://rdrr.io/pkg/latlon2map/man/ll_get_nuts_eu.html'>ll_get_nuts_eu</a></span><span class='op'>(</span>level <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_geometry.html'>st_drop_geometry</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter-joins.html'>anti_join</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>nuts_within_df</span>, by <span class='op'>=</span> <span class='st'>"NUTS_ID"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>NUTS_ID</span>, <span class='va'>CNTR_CODE</span>, <span class='va'>NUTS_NAME</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2189,6 +2196,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h1 id="access-the-data">Access the data</h1>
 <p>All datasets produced in these analyses are attached as <a href="https://github.com/giocomai/mescan_surfex_2m/releases/">releases to this GitHub repository</a> as gzipped csv files (gzipped csv files can be opened directly by software ranging from LibreOffice to R’s <code>readr</code>; alternatively, they can be unzipped and processed as regular csv files).</p>
 <p>The final dataset with all data at the LAU and NUTS level can be downloaded from the following link:</p>
+<p><a href="https://github.com/giocomai/mescan_surfex_2m/releases/download/07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018/by_lau_all_years.csv.gz" class="uri">https://github.com/giocomai/mescan_surfex_2m/releases/download/07-dataset_eu-lau_2018-nuts_2016-pop_grid_2018/by_lau_all_years.csv.gz</a></p>
 <p>Intermediate pre-processed datasets generated as detailed below can be found at the following links:</p>
 <ul>
 <li><a href="https://github.com/giocomai/mescan_surfex_2m/releases/tag/monthly_average">monthly averages</a></li>
@@ -2244,8 +2252,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
                       id <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/parse_atomic.html'>col_double</a></span><span class='op'>(</span><span class='op'>)</span>,
                       temperature <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/parse_atomic.html'>col_double</a></span><span class='op'>(</span><span class='op'>)</span>
                     <span class='op'>)</span><span class='op'>)</span>
-  <span class='op'>}</span>, .id <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='fu'>fs</span><span class='fu'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path_file.html'>path_file</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='op'>}</span>, .id <span class='op'>=</span> <span class='st'>"year"</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='fu'>fs</span><span class='fu'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path_file.html'>path_file</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
                                     <span class='fu'>stringr</span><span class='fu'>::</span><span class='fu'><a href='https://stringr.tidyverse.org/reference/str_extract.html'>str_extract</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"[0-9]{4}"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>yearly_averages_df</span>
@@ -2264,7 +2272,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <span class='co'># for sf object</span>
 <span class='va'>reference_sf</span> <span class='op'>&lt;-</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/read_rds.html'>read_rds</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'>fs</span><span class='fu'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/path.html'>path</a></span><span class='op'>(</span><span class='st'>"reference_geometry"</span>, 
-                                                <span class='st'>"reference_geometry_sf.rds"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+                                                <span class='st'>"reference_geometry_sf.rds"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># for lat/lon coordinates</span>
@@ -2273,7 +2281,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
                                 col_types <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/cols.html'>cols</a></span><span class='op'>(</span>
                                   longitude <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/parse_atomic.html'>col_double</a></span><span class='op'>(</span><span class='op'>)</span>,
                                   latitude <span class='op'>=</span> <span class='fu'>readr</span><span class='fu'>::</span><span class='fu'><a href='https://readr.tidyverse.org/reference/parse_atomic.html'>col_double</a></span><span class='op'>(</span><span class='op'>)</span>
-                                <span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+                                <span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>id <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/ranking.html'>row_number</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2281,7 +2289,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>So you can load files and then do the matching with the relevant geometry/coordinates:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>yearly_averages_df</span> <span class='op'>%&gt;%</span> 
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>yearly_averages_df</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>reference_sf</span>, by <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span>
 </code></pre>
 </div>
